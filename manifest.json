@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Codeforces Dark Mode",
+  "version": "1.0",
+  "description": "Applies a dark theme only to the Codeforces website.",
+  "content_scripts": [
+    {
+      "matches": ["https://codeforces.com/*"],
+      "css": ["dark.css"]
+    }
+  ]
+}

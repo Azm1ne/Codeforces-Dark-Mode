@@ -1,0 +1,220 @@
+/* ---- Global Colors ---- */
+:root {
+    --bg-main: #121212;
+    --bg-secondary: #1a1a1a;
+    --bg-tertiary: #1e1e1e;
+
+    --text-main: #e0e0e0;
+    --text-secondary: #bbbbbb;
+
+    --border: #333333;
+    --link: #72a7ff;
+    --link-hover: #9fc2ff;
+
+    --tag-bg: #2a2a2a;
+    --tag-text: #d0d0d0;
+
+    --table-header: #222222;
+    --table-row-alt: #181818;
+
+    --green: #22c55e;
+    --red: #ef4444;
+    --blue: #3498db;
+}
+
+/* ---- Page Background ---- */
+body, html {
+    background: var(--bg-main) !important;
+    color: var(--text-main) !important;
+}
+
+/* ---- Headers & Menus ---- */
+.header, .roundbox, #header, #pageContent {
+    background: var(--bg-secondary) !important;
+    color: var(--text-main) !important;
+}
+
+.header {
+    border-bottom: 1px solid var(--border) !important;
+}
+
+.menu, .menu-box {
+    background: var(--bg-secondary) !important;
+    border-color: var(--border) !important;
+}
+
+.menu a {
+    color: var(--text-main) !important;
+}
+
+/* ---- General Typography ---- */
+div, span, p, li, td, th, table {
+    color: var(--text-main) !important;
+}
+
+/* ---- Links ---- */
+a {
+    color: var(--link) !important;
+}
+a:hover {
+    color: var(--link-hover) !important;
+}
+
+/* ---- Code Blocks ---- */
+tt, pre, code {
+    background: var(--bg-tertiary) !important;
+    color: #e6e6e6 !important;
+    border: 1px solid var(--border) !important;
+}
+
+/* ---- Inputs and Textareas ---- */
+input, textarea, select {
+    background: var(--bg-tertiary) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--border) !important;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #777 !important;
+}
+
+/* ---- Tables ---- */
+table {
+    background: var(--bg-secondary) !important;
+    border-color: var(--border) !important;
+}
+
+th {
+    background: var(--table-header) !important;
+    color: var(--text-main) !important;
+}
+
+tr:nth-child(even) {
+    background: var(--table-row-alt) !important;
+}
+
+td, th {
+    border-color: var(--border) !important;
+}
+
+/* ---- Tags on problems ---- */
+.tag-box {
+    background: var(--tag-bg) !important;
+    color: var(--tag-text) !important;
+    border: 1px solid var(--border) !important;
+}
+
+/* ---- Problem Statements ---- */
+.problem-statement {
+    background: var(--bg-secondary) !important;
+    border-color: var(--border) !important;
+}
+
+.problem-statement * {
+    color: var(--text-main) !important;
+}
+
+/* ---- Standings ---- */
+.standings, .datatable {
+    background: var(--bg-secondary) !important;
+    color: var(--text-main) !important;
+}
+
+.standings tr:nth-child(even) {
+    background: var(--table-row-alt) !important;
+}
+
+/* ---- Verdict Colors ---- */
+.verdict-wrong-answer {
+    color: var(--red) !important;
+}
+.verdict-accepted {
+    color: var(--green) !important;
+}
+.verdict-time-limit-exceeded,
+.verdict-memory-limit-exceeded {
+    color: var(--blue) !important;
+}
+
+/* ---- User Colors (Preserved) ---- */
+.user-red { color: #ff6d6d !important; }
+.user-orange { color: #ffb86c !important; }
+.user-yellow { color: #f7f76a !important; }
+.user-violet { color: #b38bff !important; }
+.user-blue { color: #6caaff !important; }
+.user-cyan { color: #66e3ff !important; }
+.user-green { color: #7ede7e !important; }
+.user-gray { color: #aaaaaa !important; }
+
+/* ---- Comments & Blog Entries ---- */
+.comment, .topic, .topic-message, .comment-content {
+    background: var(--bg-secondary) !important;
+    border-color: var(--border) !important;
+}
+
+.comment * {
+    color: var(--text-main) !important;
+}
+
+/* ---- Footer ---- */
+.footer {
+    background: var(--bg-secondary) !important;
+    color: var(--text-secondary) !important;
+    border-top: 1px solid var(--border) !important;
+}
+
+/* -------------------------------------------------- */
+/* Remove ALL Codeforces white / off-white backgrounds */
+/* -------------------------------------------------- */
+
+* {
+    background-color: transparent !important;
+}
+
+/* Replace the whites with dark tones */
+div, section, article, form, table, td, th,
+.roundbox, .ttypography, .topic, .comment,
+.problem-statement, .problem-statement div,
+.userbox, .datatable, .sidebar,
+.content-with-sidebar, .row,
+.contest-state-phase {
+    background-color: var(--bg-secondary) !important;
+}
+
+/* Very light blocks (f5f5f5, f8f8f8, fafafa, etc) */
+[class*="box"],
+[class*="panel"],
+[class*="roundbox"],
+[class*="ttypography"],
+[class*="topic"],
+[class*="toggle"] {
+    background-color: var(--bg-secondary) !important;
+}
+
+/* Tables and inner elements */
+table, tbody, thead, tr, td, th {
+    background-color: var(--bg-secondary) !important;
+}
+
+/* Alternate row shading */
+tr:nth-child(even) {
+    background-color: var(--bg-tertiary) !important;
+}
+
+/* Problem blocks that force their own white backgrounds */
+.problem-statement .header,
+.problem-statement .section-title,
+.problem-statement .problemindexholder,
+.problem-statement > div {
+    background-color: var(--bg-secondary) !important;
+}
+
+/* Blogs & comments */
+.comment, .topic, .msg, .message {
+    background-color: var(--bg-secondary) !important;
+}
+
+/* Inputs, selects, buttons */
+input, textarea, select {
+    background-color: var(--bg-tertiary) !important;
+}
