@@ -1,36 +1,72 @@
-/* ---- Global Colors ---- */
+/*
+ * Codeforces Dark Mode — pure CSS, no scripts.
+ *
+ * WHY EVERYTHING LIVES IN A CASCADE LAYER
+ * ---------------------------------------
+ * A content script's stylesheet is injected *before* the page's own stylesheets,
+ * so when Codeforces and this file declare the same property with `!important`
+ * at the same specificity, Codeforces wins the tie on source order. That is what
+ * made `.user-blue { color: blue !important }` (community.css) beat the override
+ * here and leave handles at 1.3:1 contrast.
+ *
+ * For `!important` declarations the cascade *reverses* layer order, and unlayered
+ * styles rank last. So an important rule inside `@layer` outranks every unlayered
+ * page rule no matter how specific it is — one fix for the whole class of bugs.
+ *
+ * The catch: this only works for `!important` declarations, so every declaration
+ * below must carry it. Requires Chrome 99+ / Firefox 97+ / Safari 15.4+.
+ */
+
+@layer cf-dark {
+
+/* ---- Palette ------------------------------------------------------------ */
+/* Every `color` below is checked against --bg-tertiary, the lightest surface,
+   by tools/check-contrast.py (WCAG AA, 4.5:1). */
 :root {
     --bg-main: #121212;
     --bg-secondary: #1a1a1a;
     --bg-tertiary: #1e1e1e;
 
     --text-main: #e0e0e0;
-    --text-secondary: #bbbbbb;
+    --text-strong: #f2f2f2;
+    --text-muted: #a0a6ad;
 
-    --border: #333333;
-    --link: #72a7ff;
-    --link-hover: #9fc2ff;
+    --border: #3a3a3a;
+    --link: #79b8ff;
+    --link-hover: #a9d1ff;
 
-    --tag-bg: #2a2a2a;
-    --tag-text: #d0d0d0;
+    --tag-bg: #262626;
 
-    --table-header: #222222;
-    --table-row-alt: #181818;
+    --table-header: #232323;
+    --table-row-alt: #171717;
 
-    --green: #22c55e;
-    --red: #ef4444;
-    --blue: #3498db;
+    --green: #7ee787;
+    --red: #ff8880;
+    --blue: #79b8ff;
 }
 
-/* ---- Page Background ---- */
-body, html {
-    background: var(--bg-main) !important;
+/* ---- Page ---------------------------------------------------------------- */
+html, body {
+    background-color: var(--bg-main) !important;
     color: var(--text-main) !important;
 }
 
-/* ---- Headers & Menus ---- */
-.header, .roundbox, #header, #pageContent {
-    background: var(--bg-secondary) !important;
+/* Codeforces paints light backgrounds on a lot of containers, some of them
+   from page-level <style> blocks we cannot enumerate. Clear them all, then
+   repaint the real containers below. `background-image` is left alone so the
+   sprite icons, flags and roundbox corners survive. */
+* {
+    background-color: transparent !important;
+}
+
+div, section, article, form, table, tbody, thead, tr, td, th,
+.roundbox, .ttypography, .topic, .comment, .userbox, .datatable,
+.sidebar, .content-with-sidebar, .problem-statement {
+    background-color: var(--bg-secondary) !important;
+}
+
+#header, .header, #pageContent, .menu, .menu-box {
+    background-color: var(--bg-secondary) !important;
     color: var(--text-main) !important;
 }
 
@@ -38,183 +74,170 @@ body, html {
     border-bottom: 1px solid var(--border) !important;
 }
 
-.menu, .menu-box {
-    background: var(--bg-secondary) !important;
+.footer {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-muted) !important;
+    border-top: 1px solid var(--border) !important;
+}
+
+/* Every 1px #B9B9B9 / #e1e1e1 / #ccc hairline Codeforces draws. */
+.roundbox, .roundbox .titled, .roundbox .bottom-links,
+.roundbox .rtable td, .roundbox .rtable th,
+.datatable td, .datatable th, .topic-userpic,
+table, td, th, hr {
     border-color: var(--border) !important;
 }
 
-.menu a {
+.topic .content {
+    border-left-color: var(--border) !important;
+}
+
+/* ---- Typography ---------------------------------------------------------- */
+div, span, p, li, dt, dd, td, th, table, blockquote, caption, label, legend {
     color: var(--text-main) !important;
 }
 
-/* ---- General Typography ---- */
-div, span, p, li, td, th, table {
+/* ttypography.css paints blog headings #161e21 — invisible on a dark page. */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-strong) !important;
+}
+
+blockquote, .moreRunningStreamsSidebarNote,
+div.ttypography kbd, div.ttypography samp, div.ttypography var {
+    color: var(--text-muted) !important;
+}
+
+/* ttypography.css forces rendered math to black. */
+.MathJax, .MathJax *, .MathJax_Display, mjx-container, mjx-container * {
     color: var(--text-main) !important;
 }
 
-/* ---- Links ---- */
-a {
+mark {
+    background-color: #5c4a00 !important;
+    color: var(--text-strong) !important;
+}
+
+::selection {
+    background-color: #2f5d99 !important;
+    color: var(--text-strong) !important;
+}
+
+/* ---- Links --------------------------------------------------------------- */
+a, a:link, a:visited {
     color: var(--link) !important;
 }
-a:hover {
+
+a:hover, a:focus {
     color: var(--link-hover) !important;
+    background-color: transparent !important;
 }
 
-/* ---- Code Blocks ---- */
-tt, pre, code {
-    background: var(--bg-tertiary) !important;
-    color: #e6e6e6 !important;
-    border: 1px solid var(--border) !important;
+/* topic.css pins blog titles to #3B5998 — 2.6:1 on this background. */
+.topic .title, .topic .title *, .topic .title a,
+.topic .title a:hover, .topic .title a:visited,
+.topic-edit .title {
+    color: var(--link) !important;
 }
 
-/* ---- Inputs and Textareas ---- */
-input, textarea, select {
-    background: var(--bg-tertiary) !important;
+/* The lavalamp pill behind the active second-level tab is a light-blue sprite. */
+.second-level-menu-list li.backLava {
+    filter: brightness(0.3) saturate(0.5) !important;
+}
+
+/* ---- Rank colours -------------------------------------------------------- */
+/* community.css sets these with `!important`; several are unreadable on dark
+   (blue is 1.3:1, violet 2.4:1) and three of them are literally black. */
+.user-gray { color: #a3a3a3 !important; }
+.user-green { color: #6ee787 !important; }
+.user-cyan { color: #3ad1bd !important; }
+.user-blue { color: #7fb3ff !important; }
+.user-violet { color: #cba6f7 !important; }
+.user-yellow { color: #e0c060 !important; }
+.user-orange { color: #ffa657 !important; }
+.user-red, .user-fire { color: #ff8880 !important; }
+
+/* Black handles: admins and unrated/system accounts. */
+.user-black, .user-admin { color: var(--text-strong) !important; }
+
+/* Legendary is "black first letter, red name"; 4000+ is the inverse. Keep the
+   two-tone convention, swap black for the light neutral. */
+.user-legendary { color: #ff8880 !important; }
+.user-legendary::first-letter,
+.legendary-user-first-letter { color: var(--text-strong) !important; }
+
+.user-4000 { color: var(--text-strong) !important; }
+.user-4000::first-letter,
+.user-4000-first-letter { color: #ff8880 !important; }
+
+/* ---- Tables -------------------------------------------------------------- */
+th {
+    background-color: var(--table-header) !important;
+    color: var(--text-strong) !important;
+}
+
+tr:nth-child(even), .datatable .dark, .roundbox .dark,
+.roundbox .bottom-links, .problem-statement .test-example-line-even {
+    background-color: var(--table-row-alt) !important;
+}
+
+/* ---- Verdicts ------------------------------------------------------------ */
+.verdict-accepted { color: var(--green) !important; }
+.verdict-rejected, .verdict-wrong-answer, .verdict-failed { color: var(--red) !important; }
+.verdict-waiting, .verdict-challenged,
+.verdict-time-limit-exceeded, .verdict-memory-limit-exceeded { color: var(--blue) !important; }
+
+/* ---- Forms --------------------------------------------------------------- */
+input, textarea, select, button {
+    background-color: var(--bg-tertiary) !important;
     color: var(--text-main) !important;
     border: 1px solid var(--border) !important;
 }
 
 input::placeholder, textarea::placeholder {
-    color: #777 !important;
+    color: var(--text-muted) !important;
 }
 
-/* ---- Tables ---- */
-table {
-    background: var(--bg-secondary) !important;
-    border-color: var(--border) !important;
-}
-
-th {
-    background: var(--table-header) !important;
+/* table-form.css forces submit buttons to black text. */
+.table-form .submit:not(:disabled) {
     color: var(--text-main) !important;
 }
 
-tr:nth-child(even) {
-    background: var(--table-row-alt) !important;
-}
-
-td, th {
+/* ---- Code ---------------------------------------------------------------- */
+pre, code, tt, kbd, samp, var, .tt {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-main) !important;
     border-color: var(--border) !important;
 }
 
-/* ---- Tags on problems ---- */
+.problem-statement .sample-tests pre,
+.problem-statement .input pre,
+.problem-statement .output pre {
+    background-color: var(--bg-tertiary) !important;
+}
+
+/* prettify.css is a light-background palette: plain text #000, keywords #008,
+   comments #800. Without this the theme has to flatten code to one grey. */
+.prettyprint .pln, .lstlisting .pln { color: #d4d4d4 !important; }
+.prettyprint .str, .lstlisting .str,
+.prettyprint .atv, .lstlisting .atv { color: #e0a07a !important; }
+.prettyprint .kwd, .lstlisting .kwd,
+.prettyprint .tag, .lstlisting .tag { color: #7fb3ff !important; }
+.prettyprint .com, .lstlisting .com { color: #96b98a !important; }
+.prettyprint .typ, .lstlisting .typ { color: #5ed3bb !important; }
+.prettyprint .lit, .lstlisting .lit { color: #bdd6ad !important; }
+.prettyprint .pun, .lstlisting .pun,
+.prettyprint .opn, .lstlisting .opn,
+.prettyprint .clo, .lstlisting .clo { color: #c0c0c0 !important; }
+.prettyprint .fun, .lstlisting .fun { color: #e6dc9a !important; }
+.prettyprint .atn, .lstlisting .atn,
+.prettyprint .dec, .lstlisting .dec,
+.prettyprint .var, .lstlisting .var { color: #d3a2d0 !important; }
+
+/* ---- Problem tags -------------------------------------------------------- */
 .tag-box {
-    background: var(--tag-bg) !important;
-    color: var(--tag-text) !important;
+    background-color: var(--tag-bg) !important;
+    color: var(--text-main) !important;
     border: 1px solid var(--border) !important;
 }
 
-/* ---- Problem Statements ---- */
-.problem-statement {
-    background: var(--bg-secondary) !important;
-    border-color: var(--border) !important;
-}
-
-.problem-statement * {
-    color: var(--text-main) !important;
-}
-
-/* ---- Standings ---- */
-.standings, .datatable {
-    background: var(--bg-secondary) !important;
-    color: var(--text-main) !important;
-}
-
-.standings tr:nth-child(even) {
-    background: var(--table-row-alt) !important;
-}
-
-/* ---- Verdict Colors ---- */
-.verdict-wrong-answer {
-    color: var(--red) !important;
-}
-.verdict-accepted {
-    color: var(--green) !important;
-}
-.verdict-time-limit-exceeded,
-.verdict-memory-limit-exceeded {
-    color: var(--blue) !important;
-}
-
-/* ---- User Colors (Preserved) ---- */
-.user-red { color: #ff6d6d !important; }
-.user-orange { color: #ffb86c !important; }
-.user-yellow { color: #f7f76a !important; }
-.user-violet { color: #b38bff !important; }
-.user-blue { color: #6caaff !important; }
-.user-cyan { color: #66e3ff !important; }
-.user-green { color: #7ede7e !important; }
-.user-gray { color: #aaaaaa !important; }
-
-/* ---- Comments & Blog Entries ---- */
-.comment, .topic, .topic-message, .comment-content {
-    background: var(--bg-secondary) !important;
-    border-color: var(--border) !important;
-}
-
-.comment * {
-    color: var(--text-main) !important;
-}
-
-/* ---- Footer ---- */
-.footer {
-    background: var(--bg-secondary) !important;
-    color: var(--text-secondary) !important;
-    border-top: 1px solid var(--border) !important;
-}
-
-/* -------------------------------------------------- */
-/* Remove ALL Codeforces white / off-white backgrounds */
-/* -------------------------------------------------- */
-
-* {
-    background-color: transparent !important;
-}
-
-/* Replace the whites with dark tones */
-div, section, article, form, table, td, th,
-.roundbox, .ttypography, .topic, .comment,
-.problem-statement, .problem-statement div,
-.userbox, .datatable, .sidebar,
-.content-with-sidebar, .row,
-.contest-state-phase {
-    background-color: var(--bg-secondary) !important;
-}
-
-/* Very light blocks (f5f5f5, f8f8f8, fafafa, etc) */
-[class*="box"],
-[class*="panel"],
-[class*="roundbox"],
-[class*="ttypography"],
-[class*="topic"],
-[class*="toggle"] {
-    background-color: var(--bg-secondary) !important;
-}
-
-/* Tables and inner elements */
-table, tbody, thead, tr, td, th {
-    background-color: var(--bg-secondary) !important;
-}
-
-/* Alternate row shading */
-tr:nth-child(even) {
-    background-color: var(--bg-tertiary) !important;
-}
-
-/* Problem blocks that force their own white backgrounds */
-.problem-statement .header,
-.problem-statement .section-title,
-.problem-statement .problemindexholder,
-.problem-statement > div {
-    background-color: var(--bg-secondary) !important;
-}
-
-/* Blogs & comments */
-.comment, .topic, .msg, .message {
-    background-color: var(--bg-secondary) !important;
-}
-
-/* Inputs, selects, buttons */
-input, textarea, select {
-    background-color: var(--bg-tertiary) !important;
 }
