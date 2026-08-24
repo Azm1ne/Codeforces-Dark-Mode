@@ -135,11 +135,17 @@ mark {
 }
 
 /* ---- Links --------------------------------------------------------------- */
-a, a:link, a:visited {
+/* Keep these selectors free of pseudo-classes. `a:link` scores (0,1,1) and would
+   outrank the rank-colour rules below at (0,1,0), repainting every handle on the
+   site link-blue. Bare `a` is (0,0,1) and loses to them, which is what we want;
+   it still beats Codeforces' own `a:link { color: #0000cc }` because that one is
+   not `!important`. Same reason `:hover` skips .rated-user: handles keep their
+   rank colour under the cursor, as they do on stock Codeforces. */
+a {
     color: var(--link) !important;
 }
 
-a:hover, a:focus {
+a:hover:not(.rated-user), a:focus:not(.rated-user) {
     color: var(--link-hover) !important;
     background-color: transparent !important;
 }

@@ -71,12 +71,16 @@ specificity. The trade-off: every declaration in `dark.css` must carry
 ## ✅ Tests
 
 ```sh
-python3 tools/check-contrast.py
+python3 tools/check-theme.py
 ```
 
-Asserts that every text colour in `dark.css` clears WCAG AA (4.5:1) against
-`--bg-tertiary`, the lightest of the three theme surfaces. Clearing the
-lightest surface clears the other two.
+Two checks:
+
+- every text colour in `dark.css` clears WCAG AA (4.5:1) against
+  `--bg-tertiary`, the lightest of the three theme surfaces (clearing the
+  lightest clears the other two);
+- no rule colouring plain anchors outranks the `.user-*` rank colours, which
+  would repaint every handle on the site link-blue.
 
 ## 📸 Screenshots
 
