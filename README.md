@@ -11,8 +11,16 @@ content script.
   contrast, including admin/legendary handles that Codeforces renders in black
 - Readable blog headings, quotes and rendered MathJax
 - Dark syntax highlighting for submitted source code and `prettyprint` blocks
+- Dark Ace editor on the submit pages, with syntax colours to match
 - Styled tables, problem statements, blogs, comments, forms and menus
+- Works on the `m1`/`m2`/`m3` mirrors as well as the main site
 - CSS only — nothing runs on the page
+
+### Known limitations
+
+The rating graph and the activity heatmap are drawn by Codeforces into a
+`<canvas>`/`<svg>` with colours baked in, so they keep their light palette.
+CSS can make them visible on a dark page but cannot recolour them.
 
 ## 🚀 Install
 

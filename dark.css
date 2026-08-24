@@ -43,6 +43,18 @@
     --green: #7ee787;
     --red: #ff8880;
     --blue: #79b8ff;
+
+    /* Shared by the prettyprint blocks and the Ace editor, so the two never
+       drift apart. */
+    --syn-plain: #d4d4d4;
+    --syn-string: #e0a07a;
+    --syn-keyword: #7fb3ff;
+    --syn-comment: #96b98a;
+    --syn-type: #5ed3bb;
+    --syn-literal: #bdd6ad;
+    --syn-punct: #c0c0c0;
+    --syn-function: #e6dc9a;
+    --syn-name: #d3a2d0;
 }
 
 /* ---- Page ---------------------------------------------------------------- */
@@ -217,21 +229,72 @@ pre, code, tt, kbd, samp, var, .tt {
 
 /* prettify.css is a light-background palette: plain text #000, keywords #008,
    comments #800. Without this the theme has to flatten code to one grey. */
-.prettyprint .pln, .lstlisting .pln { color: #d4d4d4 !important; }
+.prettyprint .pln, .lstlisting .pln { color: var(--syn-plain) !important; }
 .prettyprint .str, .lstlisting .str,
-.prettyprint .atv, .lstlisting .atv { color: #e0a07a !important; }
+.prettyprint .atv, .lstlisting .atv { color: var(--syn-string) !important; }
 .prettyprint .kwd, .lstlisting .kwd,
-.prettyprint .tag, .lstlisting .tag { color: #7fb3ff !important; }
-.prettyprint .com, .lstlisting .com { color: #96b98a !important; }
-.prettyprint .typ, .lstlisting .typ { color: #5ed3bb !important; }
-.prettyprint .lit, .lstlisting .lit { color: #bdd6ad !important; }
+.prettyprint .tag, .lstlisting .tag { color: var(--syn-keyword) !important; }
+.prettyprint .com, .lstlisting .com { color: var(--syn-comment) !important; }
+.prettyprint .typ, .lstlisting .typ { color: var(--syn-type) !important; }
+.prettyprint .lit, .lstlisting .lit { color: var(--syn-literal) !important; }
 .prettyprint .pun, .lstlisting .pun,
 .prettyprint .opn, .lstlisting .opn,
-.prettyprint .clo, .lstlisting .clo { color: #c0c0c0 !important; }
-.prettyprint .fun, .lstlisting .fun { color: #e6dc9a !important; }
+.prettyprint .clo, .lstlisting .clo { color: var(--syn-punct) !important; }
+.prettyprint .fun, .lstlisting .fun { color: var(--syn-function) !important; }
 .prettyprint .atn, .lstlisting .atn,
 .prettyprint .dec, .lstlisting .dec,
-.prettyprint .var, .lstlisting .var { color: #d3a2d0 !important; }
+.prettyprint .var, .lstlisting .var { color: var(--syn-name) !important; }
+
+/* ---- Canvas / overlay widgets -------------------------------------------- */
+/* HAZARD: the blanket `div` rule near the top paints every div opaque. Widgets
+   that draw into a <canvas> stack transparent, absolutely-positioned layers on
+   top of that canvas, so painting those layers opaque hides the widget:
+   Flot's .flot-text covered the whole rating graph (and .flot-y-axis, a
+   full-size overlay, covered the x-axis labels), while Ace's .ace_cursor-layer
+   covered every line of code. Any new overlay widget needs adding here. */
+.flot-text, .flot-text div, .legend, .legend div, .legend table,
+.ace_layer, .ace_line, .ace_line *, .ace_gutter-cell, .ace_gutter-layer,
+.ace_cursor {
+    background-color: transparent !important;
+}
+
+/* Ace editor, used by the submit pages. */
+.ace_editor, .ace_scroller, .ace_content {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--syn-plain) !important;
+}
+
+.ace_gutter {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-muted) !important;
+}
+
+.ace_cursor {
+    color: var(--text-strong) !important;
+    border-left-color: var(--text-strong) !important;
+}
+
+.ace_selection, .ace_selected-word {
+    background-color: #2f5d99 !important;
+}
+
+.ace_active-line, .ace_gutter-active-line {
+    background-color: #262626 !important;
+}
+
+.ace_print-margin {
+    background-color: var(--border) !important;
+}
+
+/* Ace's textmate theme is a light-background palette (keywords #0000FF). */
+.ace_keyword, .ace_meta { color: var(--syn-keyword) !important; }
+.ace_string { color: var(--syn-string) !important; }
+.ace_comment { color: var(--syn-comment) !important; }
+.ace_constant, .ace_constant.ace_numeric { color: var(--syn-literal) !important; }
+.ace_storage, .ace_storage.ace_type, .ace_support.ace_type { color: var(--syn-type) !important; }
+.ace_entity.ace_name.ace_function, .ace_support.ace_function { color: var(--syn-function) !important; }
+.ace_variable, .ace_identifier { color: var(--syn-plain) !important; }
+.ace_paren, .ace_punctuation { color: var(--syn-punct) !important; }
 
 /* ---- Problem tags -------------------------------------------------------- */
 .tag-box {
